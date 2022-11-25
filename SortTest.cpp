@@ -102,22 +102,22 @@ TEST(Time, InsertionSort) {
 	std::ofstream f;
 	f.open("insertionSortTime.txt");
 	constexpr int maxN = 50;
-	constexpr int runs = 10000;
+	constexpr int runs = 50000;
 	for (int i = 1; i <= maxN; i++) {
-		long long _sum = 0;
-		for (int k = 0; k < runs; k++) {
-			std::vector<int> a(i);
+		std::vector<std::vector<int>> a(runs, std::vector<int>(i));
+		for (std::vector<int>& ai : a) {
 			for (int j = 0; j < i; j++) {
-				a[j] = i - j;
+				ai[j] = i - j;
 			}
-			auto start = std::chrono::high_resolution_clock::now();
-			insertionSort(&a[0], &a[0] + i - 1, lower_int_comp);
-			auto end = std::chrono::high_resolution_clock::now();
-			std::chrono::nanoseconds d = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-			_sum += d.count();
 		}
+		auto start = std::chrono::high_resolution_clock::now();
+		for (int k = 0; k < runs; k++) {
+			insertionSort(&a[k][0], &a[k][0] + i - 1, lower_int_comp);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto d = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-		f << _sum << "\n";
+		f << d.count() << "\n";
 	}
 	f.close();
 }
@@ -127,21 +127,21 @@ TEST(Time, QuickSort) {
 	f.open("quickSortTime.txt");
 	std::mt19937 g;
 	constexpr int maxN = 50;
-	constexpr int runs = 10000;
+	constexpr int runs = 50000;
 	for (int i = 1; i <= maxN; i++) {
-		long long _sum = 0;
-		for (int k = 0; k < runs; k++) {
-			std::vector<int> a(i);
+		std::vector<std::vector<int>> a(runs, std::vector<int>(i));
+		for (std::vector<int>& ai : a) {
 			for (int j = 0; j < i; j++) {
-				a[j]= g();
+				ai[j] = g();
 			}
-			auto start = std::chrono::high_resolution_clock::now();
-			sort(&a[0], &a[0] + i, lower_int_comp);
-			auto end = std::chrono::high_resolution_clock::now();
-			std::chrono::nanoseconds d = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-			_sum += d.count();
 		}
-		f << _sum << "\n";
+		auto start = std::chrono::high_resolution_clock::now();
+		for (int k = 0; k < runs; k++) {
+			sort(&a[k][0], &a[k][0] + i, lower_int_comp);
+		}
+		auto end = std::chrono::high_resolution_clock::now();
+		auto d = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+		f << d.count() << "\n";
 	}
 	f.close();
 }
