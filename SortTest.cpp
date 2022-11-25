@@ -147,9 +147,6 @@ TEST(QuickSort, OneElementArray) {
 	ASSERT_EQ(a[0], 1234);
 }
 
-
-
-
 TEST(Time, InsertionSort) {
 	std::ofstream f;
 	f.open("insertionSortTime.txt");
