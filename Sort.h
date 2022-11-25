@@ -1,6 +1,6 @@
 #pragma once
 
-constexpr int THRESHOLD = 1;
+constexpr int THRESHOLD = 28;
 
 template<typename T, typename Compare>
 void insertionSort(T* const first, T* const last, Compare comp) {

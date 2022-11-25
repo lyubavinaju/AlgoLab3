@@ -9,6 +9,7 @@
 
 static constexpr auto lower_int_comp = [](int a, int b) {return a < b; };
 static constexpr auto greater_int_comp = [](int a, int b) {return a > b; };
+static constexpr auto lower_string_comp = [](std::string a, std::string b) {return a < b; };
 static constexpr auto greater_string_comp = [](std::string a, std::string b) {return a > b; };
 
 TEST(QuickSort, Sorted) {
@@ -77,7 +78,28 @@ TEST(QuickSort, InversedComparator) {
 }
 
 
-TEST(QuickSort, Strings) {
+TEST(QuickSort, StringsLowerComp) {
+	std::mt19937 g;
+	std::vector<std::string> a;
+	constexpr int n = 10000;
+	constexpr int maxL = 35;
+	constexpr int minL = 0;
+	for (int i = 0; i < n; i++) {
+		int length = g() % (maxL - minL + 1) + minL;
+		std::string s;
+		for (int j = 0; j < length; j++) {
+			char c = char('A' + g() % 26);
+			s += c;
+		}
+		a.push_back(s);
+	}
+	sort(&a[0], &a[0] + n, lower_string_comp);
+	for (int i = 0; i < n - 1; i++) {
+		ASSERT_TRUE(!lower_string_comp(a[i + 1], a[i]));
+	}
+}
+
+TEST(QuickSort, StringsGreaterComp) {
 	std::mt19937 g;
 	std::vector<std::string> a;
 	constexpr int n = 10000;
@@ -97,6 +119,36 @@ TEST(QuickSort, Strings) {
 		ASSERT_TRUE(!greater_string_comp(a[i + 1], a[i]));
 	}
 }
+
+TEST(QuickSort, OddSize) {
+	std::mt19937 g;
+	std::vector<std::string> a;
+	constexpr int n = 10001;
+	constexpr int maxL = 35;
+	constexpr int minL = 0;
+	for (int i = 0; i < n; i++) {
+		int length = g() % (maxL - minL + 1) + minL;
+		std::string s;
+		for (int j = 0; j < length; j++) {
+			char c = char('A' + g() % 26);
+			s += c;
+		}
+		a.push_back(s);
+	}
+	sort(&a[0], &a[0] + n, greater_string_comp);
+	for (int i = 0; i < n - 1; i++) {
+		ASSERT_TRUE(!greater_string_comp(a[i + 1], a[i]));
+	}
+}
+
+TEST(QuickSort, OneElementArray) {
+	int a[1] = {1234};
+	sort(a, a + 1, lower_int_comp);
+	ASSERT_EQ(a[0], 1234);
+}
+
+
+
 
 TEST(Time, InsertionSort) {
 	std::ofstream f;
