@@ -12,14 +12,12 @@ void insertionSort(T* const first, T* const last, Compare comp) {
 			continue;
 		}
 		T element = std::move(arr[i]);
-		int insertionIndex = i - 1;
-		while (insertionIndex >= 1 && comp(element, arr[insertionIndex - 1])) {
-			insertionIndex--;
-		}
-		for (int j = i - 1; j >= insertionIndex; j--) {
+		int j = i - 1;
+		while (j >= 0 && comp(element, arr[j])) {
 			arr[j + 1] = std::move(arr[j]);
+			j--;
 		}
-		arr[insertionIndex] = std::move(element);
+		arr[j + 1] = std::move(element);
 	}
 }
 
@@ -60,7 +58,7 @@ static int createPartition(T* arr, int l, int r, T pivot, Compare comp) {
 template<typename T, typename Compare>
 void sort(T* arr, int l, int r, Compare comp) {
 	if (r <= l) return;
- 	while (r - l + 1 > THRESHOLD) {
+	while (r - l + 1 > THRESHOLD) {
 		int length = r - l + 1;
 		T* pivot = calcPivot(arr[l], arr[(r - l) / 2], arr[r], comp);
 		int mid = createPartition(arr, l, r, *pivot, comp);
